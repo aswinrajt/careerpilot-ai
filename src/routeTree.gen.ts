@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppResumeRouteImport } from './routes/_app/resume'
 import { Route as AppJobsRouteImport } from './routes/_app/jobs'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppResumeRoute = AppResumeRouteImport.update({
+  id: '/resume',
+  path: '/resume',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppJobsRoute = AppJobsRouteImport.update({
   id: '/jobs',
@@ -38,11 +44,13 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof AppDashboardRoute
   '/jobs': typeof AppJobsRoute
+  '/resume': typeof AppResumeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof AppDashboardRoute
   '/jobs': typeof AppJobsRoute
+  '/resume': typeof AppResumeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -50,13 +58,20 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/jobs': typeof AppJobsRoute
+  '/_app/resume': typeof AppResumeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/jobs'
+  fullPaths: '/' | '/dashboard' | '/jobs' | '/resume'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/jobs'
-  id: '__root__' | '/' | '/_app' | '/_app/dashboard' | '/_app/jobs'
+  to: '/' | '/dashboard' | '/jobs' | '/resume'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/_app/dashboard'
+    | '/_app/jobs'
+    | '/_app/resume'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -80,6 +95,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/resume': {
+      id: '/_app/resume'
+      path: '/resume'
+      fullPath: '/resume'
+      preLoaderRoute: typeof AppResumeRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/jobs': {
       id: '/_app/jobs'
       path: '/jobs'
@@ -100,11 +122,13 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppJobsRoute: typeof AppJobsRoute
+  AppResumeRoute: typeof AppResumeRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppJobsRoute: AppJobsRoute,
+  AppResumeRoute: AppResumeRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
